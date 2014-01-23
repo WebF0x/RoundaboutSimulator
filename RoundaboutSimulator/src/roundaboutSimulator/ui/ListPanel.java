@@ -1,4 +1,4 @@
-package dev2.ui;
+package roundaboutSimulator.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,8 +8,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import dev2.observer.Observer;
-import dev2.rotary.Rotary;
+import roundaboutSimulator.observer.Observer;
+import roundaboutSimulator.roundabout.Roundabout;
 
 public class ListPanel extends JPanel implements Observer
 {
@@ -18,12 +18,12 @@ public class ListPanel extends JPanel implements Observer
 
 	private BoxLayout			list;
 	private JLabel				stateLabel			= new JLabel("  State: ");
-	private Rotary				m_rotary;
+	private Roundabout			m_roundabout;
 	private JLabel				avTime				= new JLabel("  Average time: ");
-	private JLabel				allCars				= new JLabel("  Number of car generated: ");
-	private JLabel				disCars				= new JLabel("  Number of car disposed: ");
-	private JLabel				nbCars				= new JLabel("  Number of car simulated: ");
-	private JLabel				carsRot				= new JLabel("  Number of car in the rotary: ");
+	private JLabel				allCars				= new JLabel("  Number of cars generated: ");
+	private JLabel				disCars				= new JLabel("  Number of cars disposed: ");
+	private JLabel				nbCars				= new JLabel("  Number of cars simulated: ");
+	private JLabel				carsInside				= new JLabel("  Number of cars in the roundabout: ");
 	private JLabel				medTime				= new JLabel("  Medium Time: ");
 	private JLabel				badTime				= new JLabel("  Bad Time: ");
 	private JLabel				simTime				= new JLabel("  Simulation Time: ");
@@ -48,7 +48,7 @@ public class ListPanel extends JPanel implements Observer
 		add(allCars);
 		add(disCars);
 		add(nbCars);
-		add(carsRot);
+		add(carsInside);
 		add(medTime);
 		add(badTime);
 		add(simTime);
@@ -70,18 +70,18 @@ public class ListPanel extends JPanel implements Observer
 		g.setColor(new Color(238, 238, 238));
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		if (m_rotary != null)	// m_rotary exists
+		if (m_roundabout != null)	// m_roundabout exists
 		{
-			averageTime = m_rotary.getAverageVehicleLifeTime();
+			averageTime = m_roundabout.getAverageVehicleLifeTime();
 
 			// Pick the right color
 			Color color;
-			if (averageTime <= m_rotary.getMediumTime())
+			if (averageTime <= m_roundabout.getMediumTime())
 			{
 				color = Color.GREEN;
 			}
 			else
-				if (averageTime <= m_rotary.getBadTime())
+				if (averageTime <= m_roundabout.getBadTime())
 				{
 					color = Color.YELLOW;
 				}
@@ -107,14 +107,14 @@ public class ListPanel extends JPanel implements Observer
 	}
 
 	/**
-	 * Associate this ListPanel with a single Rotary ListPanel will use this
-	 * Rotary to calculate the statistic data
+	 * Associate this ListPanel with a single Roundabout ListPanel will use this
+	 * Roundabout to calculate the statistic data
 	 * 
-	 * @param rotary
+	 * @param roundabout
 	 */
-	public void setRotary(Rotary rotary)
+	public void setRoundabout(Roundabout roundabout)
 	{
-		m_rotary = rotary;
+		m_roundabout = roundabout;
 	}
 
 	/**
@@ -123,24 +123,24 @@ public class ListPanel extends JPanel implements Observer
 	private void refreshLabels()
 	{
 		avTime.setText("  Average time: " + formatTime(averageTime));
-		allCars.setText("  Number of car generated: " + (numberOfCars() + m_rotary.vehicleCount()));
+		allCars.setText("  Number of car generated: " + (numberOfCars() + m_roundabout.vehicleCount()));
 		disCars.setText("  Number of car disposed: " + numberOfCars());
-		nbCars.setText("  Number of car simulated: " + m_rotary.vehicleCount());
-		carsRot.setText("  Number of car in the rotary: " + m_rotary.vehicleCountRot());
-		medTime.setText("  Medium Time: " + formatTime(m_rotary.getMediumTime()));
-		badTime.setText("  Bad Time: " + formatTime(m_rotary.getBadTime()));
-		simTime.setText("  Simulation Time: " + formatElapseTime(m_rotary.getSimulationTime()));
+		nbCars.setText("  Number of car simulated: " + m_roundabout.vehicleCount());
+		carsInside.setText("  Number of car in the roundabout: " + m_roundabout.vehicleCountInside());
+		medTime.setText("  Medium Time: " + formatTime(m_roundabout.getMediumTime()));
+		badTime.setText("  Bad Time: " + formatTime(m_roundabout.getBadTime()));
+		simTime.setText("  Simulation Time: " + formatElapseTime(m_roundabout.getSimulationTime()));
 	}
 
 	/**
 	 * Returns the number of cars taken into account for the statistics These
-	 * cars have all entered and left the rotary
+	 * cars have all entered and left the roundabout
 	 * 
 	 * @return
 	 */
 	private int numberOfCars()
 	{
-		Vector<Integer> res = m_rotary.getCirculationStatisticalData();
+		Vector<Integer> res = m_roundabout.getCirculationStatisticalData();
 		return res.get(0) + res.get(1) + res.get(2);
 	}
 

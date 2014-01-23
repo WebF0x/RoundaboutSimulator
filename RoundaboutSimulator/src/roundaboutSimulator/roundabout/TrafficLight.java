@@ -1,4 +1,4 @@
-package dev2.rotary;
+package roundaboutSimulator.roundabout;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -14,7 +14,7 @@ public class TrafficLight
 	private float				m_x;						// Metres
 	private float				m_y;						// Metres
 
-	private Rotary				m_rotary;
+	private Roundabout				m_roundabout;
 	private Color				m_color	= new Color(0);	// Green / Red
 
 	private Timer				m_timer;
@@ -23,16 +23,16 @@ public class TrafficLight
 	/**
 	 * Constructor.
 	 * 
-	 * @param rotary
-	 *            Places the TrafficLight on this Rotary
+	 * @param roundabout
+	 *            Places the TrafficLight on this Roundabout
 	 * @param greenTime
 	 *            Time length of the green light (seconds)
 	 * @param redTime
 	 *            Time length of the red light (seconds)
 	 */
-	public TrafficLight(Rotary rotary, int greenTime, int redTime)
+	public TrafficLight(Roundabout roundabout, int greenTime, int redTime)
 	{
-		m_rotary = rotary;
+		m_roundabout = roundabout;
 		m_color = Color.GREEN;
 
 		m_greenTime = greenTime;
@@ -51,15 +51,15 @@ public class TrafficLight
 	/**
 	 * Constructor
 	 * 
-	 * @param rotary
-	 *            Places the TrafficLight on this Rotary
+	 * @param roundabout
+	 *            Places the TrafficLight on this Roundabout
 	 * @param halfPeriod
 	 *            Toggles between red light and green light at this time
 	 *            interval in seconds
 	 */
-	public TrafficLight(Rotary rotary, int halfPeriod)
+	public TrafficLight(Roundabout roundabout, int halfPeriod)
 	{
-		this(rotary, halfPeriod, halfPeriod);
+		this(roundabout, halfPeriod, halfPeriod);
 	}// Constructor
 
 	/**
@@ -76,7 +76,7 @@ public class TrafficLight
 		else
 			if (m_color.equals(Color.GREEN)) inSimTime = m_greenTime;
 
-		int delay = inSimTime * 1000 / m_rotary.getTimeFactor();
+		int delay = inSimTime * 1000 / m_roundabout.getTimeFactor();
 		return delay;
 	}
 
@@ -88,10 +88,10 @@ public class TrafficLight
 	 */
 	public void paintTrafficLight(Graphics g)
 	{
-		int width = m_rotary.meterToPixel(WIDTH);
-		int height = m_rotary.getLaneWidthInPixel() / 2;
-		int x = m_rotary.meterToPixel(m_x) - width / 2;
-		int y = m_rotary.meterToPixel(m_y) - height;
+		int width = m_roundabout.meterToPixel(WIDTH);
+		int height = m_roundabout.getLaneWidthInPixel() / 2;
+		int x = m_roundabout.meterToPixel(m_x) - width / 2;
+		int y = m_roundabout.meterToPixel(m_y) - height;
 
 		// Contour
 		g.setColor(Color.BLACK);

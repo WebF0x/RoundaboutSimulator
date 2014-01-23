@@ -1,4 +1,4 @@
-package dev2.ui;
+package roundaboutSimulator.ui;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -26,7 +26,7 @@ public class RenderWindow extends JFrame
 	public RenderWindow()
 	{
 		// Window properties
-		setTitle("Rotary Simulation");
+		setTitle("Roundabout Simulator");
 		setMinimumSize(new Dimension(400, 400));
 		setSize(new Dimension(600, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

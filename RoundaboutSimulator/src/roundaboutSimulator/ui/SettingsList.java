@@ -1,4 +1,4 @@
-package dev2.ui;
+package roundaboutSimulator.ui;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -9,7 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-import dev2.observer.*;
+import roundaboutSimulator.observer.*;
+
 
 public class SettingsList extends JPanel implements Observable
 {

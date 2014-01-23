@@ -1,6 +1,6 @@
-package dev2.main;
+package roundaboutSimulator.main;
 
-import dev2.ui.RenderWindow;
+import roundaboutSimulator.ui.RenderWindow;
 
 public class MainClass
 {

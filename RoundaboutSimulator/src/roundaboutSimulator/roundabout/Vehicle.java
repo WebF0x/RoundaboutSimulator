@@ -1,4 +1,4 @@
-package dev2.rotary;
+package roundaboutSimulator.roundabout;
 
 // import java.awt.Color;
 import java.awt.Graphics;
@@ -9,7 +9,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import dev2.ui.RenderWindow;
+import roundaboutSimulator.ui.RenderWindow;
+
 
 public class Vehicle
 {
@@ -24,7 +25,7 @@ public class Vehicle
 																	// per hour
 	private static BufferedImage	m_image;
 
-	private Rotary					m_rotary;
+	private Roundabout					m_roundabout;
 
 	private State					m_state		= State.ENTERING;
 
@@ -37,13 +38,13 @@ public class Vehicle
 	private int						m_lifeTime	= 0;				// Milliseconds
 
 	/**
-	 * Constructor. A vehicle requires a Rotary to display correctly.
+	 * Constructor. A vehicle requires a Roundabout to display correctly.
 	 * 
-	 * @param rotary
+	 * @param roundabout
 	 */
-	public Vehicle(Rotary rotary)
+	public Vehicle(Roundabout roundabout)
 	{
-		m_rotary = rotary;
+		m_roundabout = roundabout;
 		randomSource();
 		randomDestination();
 		setTheta();
@@ -55,7 +56,7 @@ public class Vehicle
 	 */
 	protected void randomSource()
 	{
-		m_source = (int) (m_rotary.getNbLane() * Math.random());
+		m_source = (int) (m_roundabout.getNbLane() * Math.random());
 	}// randomSource
 
 	/**
@@ -63,7 +64,7 @@ public class Vehicle
 	 */
 	protected void randomDestination()
 	{
-		m_destination = (int) (m_rotary.getNbLane() * Math.random());
+		m_destination = (int) (m_roundabout.getNbLane() * Math.random());
 	}// randomDirection
 
 	/**
@@ -113,26 +114,26 @@ public class Vehicle
 		{
 			case ENTERING:
 				rotationAngle = getTheta();
-				dX1 = m_rotary.meterToPixel(m_radius + Vehicle.LENGTH / 2);
-				dY1 = m_rotary.meterToPixel(-Vehicle.WIDTH / 2) + laneAdjustement();
-				dX2 = m_rotary.meterToPixel(m_radius - Vehicle.LENGTH / 2);
-				dY2 = m_rotary.meterToPixel(Vehicle.WIDTH / 2) + laneAdjustement();
+				dX1 = m_roundabout.meterToPixel(m_radius + Vehicle.LENGTH / 2);
+				dY1 = m_roundabout.meterToPixel(-Vehicle.WIDTH / 2) + laneAdjustement();
+				dX2 = m_roundabout.meterToPixel(m_radius - Vehicle.LENGTH / 2);
+				dY2 = m_roundabout.meterToPixel(Vehicle.WIDTH / 2) + laneAdjustement();
 
 				break;
 			case LEAVING:
 				rotationAngle = getTheta();
-				dX1 = m_rotary.meterToPixel(m_radius - Vehicle.LENGTH / 2);
-				dY1 = m_rotary.meterToPixel(-Vehicle.WIDTH / 2) + laneAdjustement();
-				dX2 = m_rotary.meterToPixel(m_radius + Vehicle.LENGTH / 2);
-				dY2 = m_rotary.meterToPixel(Vehicle.WIDTH / 2) + laneAdjustement();
+				dX1 = m_roundabout.meterToPixel(m_radius - Vehicle.LENGTH / 2);
+				dY1 = m_roundabout.meterToPixel(-Vehicle.WIDTH / 2) + laneAdjustement();
+				dX2 = m_roundabout.meterToPixel(m_radius + Vehicle.LENGTH / 2);
+				dY2 = m_roundabout.meterToPixel(Vehicle.WIDTH / 2) + laneAdjustement();
 
 				break;
 			case INSIDE:
 				rotationAngle = getTheta() - Math.PI / 2.0f;
-				dX1 = m_rotary.meterToPixel(-Vehicle.LENGTH / 2) + laneAdjustement();
-				dY1 = m_rotary.meterToPixel(m_radius - Vehicle.WIDTH / 2);
-				dX2 = m_rotary.meterToPixel(Vehicle.LENGTH / 2) + laneAdjustement();
-				dY2 = m_rotary.meterToPixel(m_radius + Vehicle.WIDTH / 2);
+				dX1 = m_roundabout.meterToPixel(-Vehicle.LENGTH / 2) + laneAdjustement();
+				dY1 = m_roundabout.meterToPixel(m_radius - Vehicle.WIDTH / 2);
+				dX2 = m_roundabout.meterToPixel(Vehicle.LENGTH / 2) + laneAdjustement();
+				dY2 = m_roundabout.meterToPixel(m_radius + Vehicle.WIDTH / 2);
 
 				break;
 		}
@@ -158,7 +159,7 @@ public class Vehicle
 		switch (getState())
 		{
 			case ENTERING:
-				if (getRadius() <= m_rotary.getRadius() - Vehicle.WIDTH) setState(Vehicle.State.INSIDE);
+				if (getRadius() <= m_roundabout.getRadius() - Vehicle.WIDTH) setState(Vehicle.State.INSIDE);
 				setRadius(getRadius() - deplacement);
 				break;
 			case LEAVING:
@@ -180,8 +181,8 @@ public class Vehicle
 		{
 
 			case ENTERING:
-				if (getRadius() <= m_rotary.getRadius() + 2 * Vehicle.WIDTH && getRadius() >= m_rotary.getRadius() + Vehicle.WIDTH
-						&& m_rotary.checkEntrance(this))
+				if (getRadius() <= m_roundabout.getRadius() + 2 * Vehicle.WIDTH && getRadius() >= m_roundabout.getRadius() + Vehicle.WIDTH
+						&& m_roundabout.checkEntrance(this))
 				{
 					stop();
 					return;
@@ -190,14 +191,14 @@ public class Vehicle
 				// deux cas
 				// Dans les deux cas:
 			case LEAVING:
-				if (m_rotary.checkLane(this))	// Si besoin de freiner
+				if (m_roundabout.checkLane(this))	// Si besoin de freiner
 					stop();
 				else
 					move();
 				break;
 
 			case INSIDE:
-				if ((isAtExit() && m_rotary.checkExit(this)) || m_rotary.checkInsideRotary(getTheta()))
+				if ((isAtExit() && m_roundabout.checkExit(this)) || m_roundabout.checkInsideRoundabout(getTheta()))
 					stop();
 				else
 					move();
@@ -214,10 +215,10 @@ public class Vehicle
 	{
 		float diff;
 		if (m_source <= m_destination)
-			diff = getTheta() - Vehicle.LENGTH / m_rotary.getRadius() + (float) (2f * Math.PI)
-					- (float) (2f * Math.PI * m_destination / m_rotary.getNbLane());
+			diff = getTheta() - Vehicle.LENGTH / m_roundabout.getRadius() + (float) (2f * Math.PI)
+					- (float) (2f * Math.PI * m_destination / m_roundabout.getNbLane());
 		else
-			diff = getTheta() - Vehicle.LENGTH / m_rotary.getRadius() - (float) (2f * Math.PI * m_destination / m_rotary.getNbLane());
+			diff = getTheta() - Vehicle.LENGTH / m_roundabout.getRadius() - (float) (2f * Math.PI * m_destination / m_roundabout.getNbLane());
 
 		if (diff <= 0)
 		{
@@ -236,9 +237,9 @@ public class Vehicle
 		switch (getState())
 		{
 			case ENTERING:
-				return -m_rotary.meterToPixel(Vehicle.WIDTH);
+				return -m_roundabout.meterToPixel(Vehicle.WIDTH);
 			case LEAVING:
-				return m_rotary.meterToPixel(Vehicle.WIDTH);
+				return m_roundabout.meterToPixel(Vehicle.WIDTH);
 			case INSIDE:
 			default:
 				return 0;
@@ -300,13 +301,13 @@ public class Vehicle
 		switch (getState())
 		{
 			case ENTERING:
-				m_theta = (float) (2f * Math.PI * m_source / m_rotary.getNbLane());
+				m_theta = (float) (2f * Math.PI * m_source / m_roundabout.getNbLane());
 				break;
 			case LEAVING:
-				m_theta = (float) (2f * Math.PI * m_destination / m_rotary.getNbLane());
+				m_theta = (float) (2f * Math.PI * m_destination / m_roundabout.getNbLane());
 				break;
 			case INSIDE:
-				setRadius(m_rotary.getRadius() - Vehicle.WIDTH);
+				setRadius(m_roundabout.getRadius() - Vehicle.WIDTH);
 				m_theta -= (SPEED / (float) RenderWindow.FPS / 3.6f / (float) getRadius());
 				break;
 		}
@@ -317,10 +318,10 @@ public class Vehicle
 	 */
 	protected void setRadius()
 	{
-		setRadius(m_rotary.pixelToMeter(Math.max(m_rotary.getWidth(), m_rotary.getHeight()) / 2) + Vehicle.LENGTH);
+		setRadius(m_roundabout.pixelToMeter(Math.max(m_roundabout.getWidth(), m_roundabout.getHeight()) / 2) + Vehicle.LENGTH);
 
 		// Si on ne peut pas placer le vehicle, on le recule un peu
-		while (!m_rotary.canPlaceVehicle(this))
+		while (!m_roundabout.canPlaceVehicle(this))
 		{
 			setRadius(getRadius() + 2 * Vehicle.LENGTH);
 		}

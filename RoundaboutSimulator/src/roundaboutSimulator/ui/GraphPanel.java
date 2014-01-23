@@ -1,4 +1,4 @@
-package dev2.ui;
+package roundaboutSimulator.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,8 +12,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import dev2.observer.Observer;
-import dev2.rotary.Rotary;
+import roundaboutSimulator.observer.Observer;
+import roundaboutSimulator.roundabout.Roundabout;
+
 
 public class GraphPanel extends JPanel implements Observer
 {
@@ -22,7 +23,7 @@ public class GraphPanel extends JPanel implements Observer
 
 	JLabel						label;
 	private boolean				m_isDisplaying		= true;
-	private Rotary				m_rotary;
+	private Roundabout				m_roundabout;
 	private BufferedImage		m_noResults;
 	private BufferedImage		m_title;
 	private float				minVal				= 0;
@@ -103,13 +104,13 @@ public class GraphPanel extends JPanel implements Observer
 	}
 
 	/**
-	 * Updates the GraphPanel with the newest values from Rotary.
+	 * Updates the GraphPanel with the newest values from Roundabout.
 	 */
 	private void updateGraph()
 	{
-		if (m_rotary != null)
+		if (m_roundabout != null)
 		{
-			Vector<Integer> res = m_rotary.getCirculationStatisticalData();
+			Vector<Integer> res = m_roundabout.getCirculationStatisticalData();
 			setGreen(res.get(0));
 			setYellow(res.get(1));
 			setRed(res.get(2));
@@ -159,7 +160,7 @@ public class GraphPanel extends JPanel implements Observer
 	}
 
 	/**
-	 * Displays the results received from the Rotary.
+	 * Displays the results received from the Roundabout.
 	 * 
 	 * @param g
 	 *            - Graphics
@@ -196,14 +197,14 @@ public class GraphPanel extends JPanel implements Observer
 	}
 
 	/**
-	 * Defines a Rotary from which GraphPanel must take its results.
+	 * Defines a Roundabout from which GraphPanel must take its results.
 	 * 
-	 * @param rotary
-	 *            - Rotary
+	 * @param roundabout
+	 *            - Roundabout
 	 */
-	public void addRotary(Rotary rotary)
+	public void addRoundabout(Roundabout roundabout)
 	{
-		m_rotary = rotary;
+		m_roundabout = roundabout;
 	}
 
 	// Getters

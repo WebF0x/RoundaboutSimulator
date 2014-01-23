@@ -1,4 +1,4 @@
-package dev2.rotary;
+package roundaboutSimulator.roundabout;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,10 +8,11 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import dev2.observer.Observer;
-import dev2.ui.RenderWindow;
+import roundaboutSimulator.observer.Observer;
+import roundaboutSimulator.ui.RenderWindow;
 
-public class Rotary extends JPanel implements Observer
+
+public class Roundabout extends JPanel implements Observer
 {
 	private static final long	serialVersionUID	= 3760556495169242627L;
 
@@ -32,7 +33,7 @@ public class Rotary extends JPanel implements Observer
 	// Cars per minute
 	private int					m_carFlow			= 1;
 
-	private int					m_radiusRotaryPixels;
+	private int					m_radiusRoundaboutPixels;
 	private int					m_radiusCenterPixels;
 	private int					m_laneWidthInPixel;
 
@@ -43,9 +44,9 @@ public class Rotary extends JPanel implements Observer
 	private final Color			GRASS_COLOR			= new Color(58, 157, 35);
 
 	/**
-	 * Creates a standard rotary.
+	 * Creates a standard roundabout.
 	 */
-	public Rotary()
+	public Roundabout()
 	{
 		super();
 		m_vehicles = new ArrayList<Vehicle>();
@@ -64,7 +65,7 @@ public class Rotary extends JPanel implements Observer
 	 */
 	public int meterToPixel(float meters)
 	{
-		// The radius of the rotary takes up a fraction of the screen.
+		// The radius of the roundabout takes up a fraction of the screen.
 		final float fraction = 1 / 4f;
 
 		final float ratio = fraction * Math.min(getWidth(), getHeight()) / (float) getRadius();
@@ -95,7 +96,7 @@ public class Rotary extends JPanel implements Observer
 	 */
 	public float pixelToMeter(int pixels)
 	{
-		// The radius of the rotary takes up a fraction of the screen
+		// The radius of the roundabout takes up a fraction of the screen
 		float fraction = 1 / 4f;
 
 		float ratio = fraction * Math.min(getWidth(), getHeight()) / (float) getRadius();
@@ -114,10 +115,10 @@ public class Rotary extends JPanel implements Observer
 			setRadius(args[1]);
 			setStopTime(args[2]);
 
-			m_radiusRotaryPixels = meterToPixel(getRadius());
+			m_radiusRoundaboutPixels = meterToPixel(getRadius());
 			m_radiusCenterPixels = meterToPixel(getRadius() - 2 * Vehicle.WIDTH);
 
-			resetRotary();
+			resetRoundabout();
 			repaint();
 
 			m_light.setHalfPeriod(m_halfPeriod);
@@ -126,7 +127,7 @@ public class Rotary extends JPanel implements Observer
 		setCarFlow(args[3]);
 	}// update Override
 
-	public void resetRotary()
+	public void resetRoundabout()
 	{
 		// Erase vehicles
 		m_vehicles.clear();
@@ -177,11 +178,11 @@ public class Rotary extends JPanel implements Observer
 		// Clears everything
 		g2d.clearRect(-halfWidth, -halfHeight, getWidth(), getHeight());
 
-		m_radiusRotaryPixels = meterToPixel(getRadius());
+		m_radiusRoundaboutPixels = meterToPixel(getRadius());
 		m_radiusCenterPixels = meterToPixel(getRadius() - 2 * Vehicle.WIDTH);
 
-		// Draw the rotary
-		paintRotary(g2d);
+		// Draw the roundabout
+		paintRoundabout(g2d);
 
 		// Draw the vehicles
 		paintVehicles(g2d);
@@ -191,12 +192,12 @@ public class Rotary extends JPanel implements Observer
 	}// paintComponent Override
 
 	/**
-	 * Draws the rotary accordingly with its current settings.
+	 * Draws the roundabout accordingly with its current settings.
 	 * 
 	 * @param g
 	 *            - Graphics
 	 */
-	private void paintRotary(Graphics g)
+	private void paintRoundabout(Graphics g)
 	{
 		// Draw the lanes, if there are any.
 		if (getNbLane() > 0)
@@ -215,7 +216,7 @@ public class Rotary extends JPanel implements Observer
 			// Draws the lanes
 			g2d.setColor(Color.GRAY);
 			double stepAngle = 2 * Math.PI / getNbLane();
-			m_laneWidthInPixel = (int) (2f * (m_radiusRotaryPixels - m_radiusCenterPixels));
+			m_laneWidthInPixel = (int) (2f * (m_radiusRoundaboutPixels - m_radiusCenterPixels));
 			for (int i = 0; i < getNbLane(); i++)
 			{
 				g2d.rotate(stepAngle);
@@ -228,11 +229,11 @@ public class Rotary extends JPanel implements Observer
 
 		// Draws the circular part of the roundabout.
 		g.setColor(Color.GRAY);
-		g.fillOval(-m_radiusRotaryPixels, -m_radiusRotaryPixels, 2 * m_radiusRotaryPixels, 2 * m_radiusRotaryPixels); // Extérieur
+		g.fillOval(-m_radiusRoundaboutPixels, -m_radiusRoundaboutPixels, 2 * m_radiusRoundaboutPixels, 2 * m_radiusRoundaboutPixels); // Extérieur
 
 		g.setColor(GRASS_COLOR);
 		g.fillOval(-m_radiusCenterPixels, -m_radiusCenterPixels, 2 * m_radiusCenterPixels, 2 * m_radiusCenterPixels); // Intérieur
-	}// paintRotary
+	}// paintRoundabout
 
 	/**
 	 * Draws all simulated vehicles.
@@ -366,10 +367,10 @@ public class Rotary extends JPanel implements Observer
 		return average;
 	}
 
-	public boolean checkInsideRotary(float theta)
+	public boolean checkInsideRoundabout(float theta)
 	{
 		return false;
-	}// checkInsideRotary
+	}// checkInsideRoundabout
 
 	/**
 	 * Verifies if the vehicle in its current state, radius and theta can be
@@ -468,7 +469,7 @@ public class Rotary extends JPanel implements Observer
 
 	/**
 	 * Verifies for a specific vehicle if the way is clear to enter the inside
-	 * of the rotary. If the way is clear, the method returns false. Otherwise
+	 * of the roundabout. If the way is clear, the method returns false. Otherwise
 	 * it return true.
 	 * 
 	 * @param vehicle
@@ -548,11 +549,11 @@ public class Rotary extends JPanel implements Observer
 	}
 
 	/**
-	 * Returns the number of vehicle inside the rotary.
+	 * Returns the number of vehicle inside the roundabout.
 	 * 
 	 * @return int
 	 */
-	public int vehicleCountRot()
+	public int vehicleCountInside()
 	{
 		int count = 0;
 		for (int i = 0; i < vehicleCount(); i++)
@@ -602,5 +603,5 @@ public class Rotary extends JPanel implements Observer
 		m_light.restart();
 	}
 
-}// class Rotary
+}// class Roundabout
 
