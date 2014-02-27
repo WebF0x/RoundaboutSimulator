@@ -1,8 +1,8 @@
 RoundaboutSimulator
 ===================
 
-As you can see in the screenshot, you can make changes to the roundabout variables and watch their effects in a real-time simulation 
-    
+Play with the size of the roundabout, the rate of incoming traffic and the red light settings to see how it affects drivers.
+
 Screenshot:
 -----------
 ![Screenshot of the application](/RoundaboutSimulator/image/DemoScreenShot.png "Screenshot")
