@@ -1,3 +1,7 @@
+/*
+    Copyright (c) 2013, Maxime Dupuis, Philippe Roy Villeneuve 
+*/
+
 package roundaboutSimulator.roundabout;
 
 import java.awt.Color;
